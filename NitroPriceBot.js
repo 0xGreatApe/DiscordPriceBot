@@ -6,6 +6,7 @@ const {
   Events,
   GatewayIntentBits,
   ActivityType,
+  GuildMember,
 } = require("discord.js");
 const fetch = require("node-fetch");
 
@@ -15,7 +16,11 @@ const guildId = process.env.GUILD_ID;
 
 // Create a new client instance
 const client = new Client({
-  intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMembers,
+  ],
 });
 
 client.once(Events.ClientReady, (c) => {
@@ -51,20 +56,28 @@ client.on("ready", async () => {
     tokenPriceUSD = parseFloat(data[coinId].usd.toFixed(5));
     usd_24h_change = parseFloat(data[coinId].usd_24h_change.toFixed(2));
 
-    // try {
-    //   guild.me.setNickname(`$${tokenPriceUSD}`);
-    // } catch (err) {
-    //   console.error(err);
-    // }
-
-    // const botMember = guild.me;
-    // botMember.setNickname(`$${tokenPriceUSD}`).catch((error) => {
-    //   console.error(
-    //     `Error setting nickname in guild ${guildId}: ${error.message}`
-    //   );
-    // });
-
     let priceChange = `TROVEUSD | ${usd_24h_change}%`;
+
+    // Get the guild using its ID
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) {
+      console.error(`Guild with ID ${guildId} not found`);
+      return;
+    }
+
+    // Get the bot's member object in the guild
+    guild.members
+      .fetch(client.user.id)
+      .then((botMember) => {
+        const newNickname = `$${tokenPriceUSD}`;
+        botMember
+          .setNickname(newNickname)
+          .then((updated) =>
+            console.log(`Updated bot nickname to ${updated.nickname}`)
+          )
+          .catch(console.error);
+      })
+      .catch(console.error);
 
     try {
       const presenceUpdate = client.user.setActivity(priceChange, {
@@ -74,5 +87,6 @@ client.on("ready", async () => {
     } catch (error) {
       console.error(`Error setting activity: ${error}`);
     }
-  }, 5000); // update every 30 mins 1800000
+  }, 10000); // update every 30 mins 1800000
 });
+ 
