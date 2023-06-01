@@ -11,7 +11,7 @@ const {
 const fetch = require("node-fetch");
 const keep_alive = require("./keep_alive.js");
 
-const token = process.env.CLIENT_TOKEN;
+const token = process.env.CLIENT_TOKEN_TEST;
 const coinId = process.env.COIN_ID;
 
 // Create a new client instance
@@ -45,7 +45,7 @@ client.on("ready", async () => {
   setInterval(async () => {
     try {
       response = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=nitro-cartel&vs_currencies=usd&include_24hr_change=true`
+        `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd&include_24hr_change=true`
       );
       data = await response.json();
     } catch (error) {
@@ -67,14 +67,20 @@ client.on("ready", async () => {
           botMember
             .setNickname(currentPrice)
             .then((updated) =>
-              console.log(`Updated bot nickname in guild ${guild.id} to ${updated.nickname}`)
+              console.log(
+                `Updated bot nickname in guild ${guild.id} to ${updated.nickname}`
+              )
             )
             .catch((error) => {
-              console.error(`Error setting nickname in guild ${guild.id}: ${error.message}`);
+              console.error(
+                `Error setting nickname in guild ${guild.id}: ${error.message}`
+              );
             });
         })
         .catch((error) => {
-          console.error(`Error fetching bot member in guild ${guild.id}: ${error.message}`);
+          console.error(
+            `Error fetching bot member in guild ${guild.id}: ${error.message}`
+          );
         });
     });
 
@@ -88,4 +94,3 @@ client.on("ready", async () => {
     }
   }, 10000); // update every 10 seconds
 });
-
