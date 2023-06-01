@@ -6,7 +6,6 @@ const {
   Events,
   GatewayIntentBits,
   ActivityType,
-  GuildMember,
 } = require("discord.js");
 const fetch = require("node-fetch");
 
@@ -52,11 +51,11 @@ client.on("ready", async () => {
       console.error(`Error fetching data: ${error.message}`);
       return;
     }
-
+    // get and update price
     tokenPriceUSD = parseFloat(data[coinId].usd.toFixed(5));
     usd_24h_change = parseFloat(data[coinId].usd_24h_change.toFixed(2));
-
     let priceChange = `TROVEUSD | ${usd_24h_change}%`;
+    let currentPrice = `$${tokenPriceUSD}`;
 
     // Get the guild using its ID
     const guild = client.guilds.cache.get(guildId);
@@ -69,9 +68,8 @@ client.on("ready", async () => {
     guild.members
       .fetch(client.user.id)
       .then((botMember) => {
-        const newNickname = `$${tokenPriceUSD}`;
         botMember
-          .setNickname(newNickname)
+          .setNickname(currentPrice)
           .then((updated) =>
             console.log(`Updated bot nickname to ${updated.nickname}`)
           )
@@ -79,6 +77,7 @@ client.on("ready", async () => {
       })
       .catch(console.error);
 
+    // Update activity status
     try {
       const presenceUpdate = client.user.setActivity(priceChange, {
         type: ActivityType.Watching,
@@ -89,4 +88,3 @@ client.on("ready", async () => {
     }
   }, 10000); // update every 30 mins 1800000
 });
- 
