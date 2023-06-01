@@ -1,5 +1,9 @@
 # Discord Price Bot
 
+[![Code Coverage](https://img.shields.io/codecov/c/github/0xGreatApe/DiscordPriceBot.svg)](https://codecov.io/gh/0xGreatApe/DiscordPriceBot)
+[![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/your-username/your-project/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 DiscordPriceBot is a Discord bot that provides real-time pricing information for Arbitrove tokens. It fetches the latest price data from the Coingecko API and displays it as the bot's nickname in each server it is a member of. Additionally, it sets a custom activity status showing the 24-hour change percentage of the token's price.
 
 ## Features
