@@ -9,9 +9,10 @@ const {
   GuildMember,
 } = require("discord.js");
 const fetch = require("node-fetch");
+const keep_alive = require("./keep_alive.js");
 
 const token = process.env.CLIENT_TOKEN;
-const coinId = process.env.COIN_ID; 
+const coinId = process.env.COIN_ID;
 
 // Create a new client instance
 const client = new Client({
@@ -87,4 +88,4 @@ client.on("ready", async () => {
     }
   }, 10000); // update every 10 seconds
 });
- 
+

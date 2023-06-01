@@ -87,3 +87,5 @@ start = "typescript-language-server --stdio"
 
 [deployment]
 run = ["sh", "-c", "node index.js"]
+ignorePorts = true
+deploymentTarget = "gce"
