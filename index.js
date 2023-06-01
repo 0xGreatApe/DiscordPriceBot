@@ -6,12 +6,12 @@ const {
   Events,
   GatewayIntentBits,
   ActivityType,
+  GuildMember,
 } = require("discord.js");
 const fetch = require("node-fetch");
 
 const token = process.env.CLIENT_TOKEN;
-const coinId = process.env.COIN_ID;
-const guildId = process.env.GUILD_ID;
+const coinId = process.env.COIN_ID; 
 
 // Create a new client instance
 const client = new Client({
@@ -51,33 +51,32 @@ client.on("ready", async () => {
       console.error(`Error fetching data: ${error.message}`);
       return;
     }
-    // get and update price
+
     tokenPriceUSD = parseFloat(data[coinId].usd.toFixed(5));
     usd_24h_change = parseFloat(data[coinId].usd_24h_change.toFixed(2));
+
     let priceChange = `TROVEUSD | ${usd_24h_change}%`;
     let currentPrice = `$${tokenPriceUSD}`;
 
     // Get the guild using its ID
-    const guild = client.guilds.cache.get(guildId);
-    if (!guild) {
-      console.error(`Guild with ID ${guildId} not found`);
-      return;
-    }
+    client.guilds.cache.forEach((guild) => {
+      guild.members
+        .fetch(client.user.id)
+        .then((botMember) => {
+          botMember
+            .setNickname(currentPrice)
+            .then((updated) =>
+              console.log(`Updated bot nickname in guild ${guild.id} to ${updated.nickname}`)
+            )
+            .catch((error) => {
+              console.error(`Error setting nickname in guild ${guild.id}: ${error.message}`);
+            });
+        })
+        .catch((error) => {
+          console.error(`Error fetching bot member in guild ${guild.id}: ${error.message}`);
+        });
+    });
 
-    // Get the bot's member object in the guild
-    guild.members
-      .fetch(client.user.id)
-      .then((botMember) => {
-        botMember
-          .setNickname(currentPrice)
-          .then((updated) =>
-            console.log(`Updated bot nickname to ${updated.nickname}`)
-          )
-          .catch(console.error);
-      })
-      .catch(console.error);
-
-    // Update activity status
     try {
       const presenceUpdate = client.user.setActivity(priceChange, {
         type: ActivityType.Watching,
@@ -86,5 +85,6 @@ client.on("ready", async () => {
     } catch (error) {
       console.error(`Error setting activity: ${error}`);
     }
-  }, 10000); // update every 30 mins 1800000
+  }, 10000); // update every 10 seconds
 });
+ 
