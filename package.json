@@ -10,6 +10,7 @@
   "keywords": [],
   "author": "0xGreatApe",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "discord.js": "^14.11.0",
     "dotenv": "^16.1.1",

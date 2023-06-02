@@ -1,15 +1,10 @@
 // Initialize dotenv
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const {
-  Client,
-  Events,
-  GatewayIntentBits,
-  ActivityType,
-  GuildMember,
-} = require("discord.js");
-const fetch = require("node-fetch");
-const keep_alive = require("./keep_alive.js");
+import { Client, Events, GatewayIntentBits, ActivityType } from "discord.js";
+import fetch from "node-fetch";
+import keepAlive from "./keepAlive.js";
 
 const token = process.env.CLIENT_TOKEN_TEST;
 const coinId = process.env.COIN_ID;
@@ -22,6 +17,8 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
   ],
 });
+
+keepAlive(); // run keep alive webserver for replit
 
 client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
