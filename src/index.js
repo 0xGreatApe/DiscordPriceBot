@@ -6,7 +6,7 @@ import { Client, Events, GatewayIntentBits, ActivityType } from "discord.js";
 import fetch from "node-fetch";
 import keepAlive from "./keepAlive.js";
 
-const token = process.env.CLIENT_TOKEN_TEST;
+const token = process.env.CLIENT_TOKEN;
 const coinId = process.env.COIN_ID;
 
 // Create a new client instance
